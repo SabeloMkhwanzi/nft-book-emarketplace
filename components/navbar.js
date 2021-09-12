@@ -7,9 +7,9 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline'
 
 const navigation = [
   { name: 'Home', href: '/', current: false },
-  { name: 'Create', href: '/create-items', current: false },
-  { name: 'Collection', href: '/my-assets', current: false },
-  { name: 'Dashboard', href: '/creator-dashboard', current: false },
+  { name: 'Create', href: '/create', current: false },
+  { name: 'Collection', href: '/collection', current: false },
+  { name: 'Dashboard', href: '/dashboard', current: false },
 ]
 
 function classNames(...classes) {

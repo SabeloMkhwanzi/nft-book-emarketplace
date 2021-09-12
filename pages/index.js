@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable @next/next/no-html-link-for-pages */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import { ethers } from 'ethers'
@@ -8,10 +10,21 @@ import { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { UserRemoveIcon, ShoppingBagIcon, BookOpenIcon, AnnotationIcon, GlobeAltIcon, LightningBoltIcon, ScaleIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 
+
+
+
+import { Document, Page, pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc =
+`//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+
 import { nftaddress, nftmarketaddress } from '../config'
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../artifacts/contracts/NFTMarket.sol/NFTMarket.json'
+
+
+
 
 
 export default function Home() {
@@ -49,6 +62,8 @@ export default function Home() {
     setNfts(items)
     setLoadingState('loaded') 
   }
+
+
   async function buyNft(nft) {
     /* needs the user to sign the transaction, so will use Web3Provider and sign it */
     const web3Modal = new Web3Modal()
@@ -65,12 +80,21 @@ export default function Home() {
     await transaction.wait()
     loadNFTs()
   }
+ 
+
+   const [numPages, setNumPages] = useState(null);
+   const [pageNumber, setPageNumber] = useState(1);
+
+
+  function onDocumentLoadSuccess({ numPages }) {
+ 	setNumPages(numPages);
+ 	setPageNumber(1); }
   
 const features = [
   {
     name: 'How do I create an NFT Book?',
     description:
-      'Click [Create] and choose your file to upload. We currently support PDF, .',
+      'Choose your file to upload and Click [Create Nft Assets]. We currently support PDF, .',
     icon: BookOpenIcon,
   },
   {
@@ -87,68 +111,100 @@ const features = [
   },
  
 ]
+ 
+
+console.log('image', nfts )
 
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
   return (
       
-    <>
-    <div>
-      <div>
-        <main className="mt-10 mx-auto max-w-5xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-13 xl:mt-28">
-          <div className="sm:text-center lg:text-left">
-            <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-7xl">
-              <span className="block xl:inline">SCRIPTO </span>{' '}
-              <span className="block text-indigo-600 xl:inline">NFT BOOK Marketplace</span>
-            </h1>
-            <p className="mt-3 text-base pt-7 text-gray-800 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-8 md:text-xl lg:mx-0">
-             NFT revolution - Has presents a profitable business opportunity for anyone who intends to start their own NFT marketplace, Here at SCRIPTO 
-             we offer Authors, writers & artist a platform to exchange there incredible effort with NFT.
-            </p>
-            <div className="mb-36  sm:mt-10 pt-14 sm:flex sm:justify-center lg:justify-centre">
-              <div className="rounded-md shadow">
-                <a
-                  href="#"
-                  className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-                >
-                  EXPLORE
-                </a>
-              </div>
-              <div className="mt-3 sm:mt-0 sm:ml-3">
-                <a
-                  href="#"
-                  className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
-                >
-                  CREATE
-                </a>
+            <>
+            <div>
+              <div>
+                <main className="mt-10 mx-auto max-w-5xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-13 xl:mt-28 ">
+                  <div className="sm:text-center lg:text-left">
+                    <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-7xl">
+                      <span className="block xl:inline">SCRIPTO </span>{' '}
+                      <span className="block text-indigo-600 xl:inline">NFT BOOK Marketplace</span>
+                    </h1>
+                    <p className="mt-3 text-base pt-7 text-gray-800 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-8 md:text-xl lg:mx-0">
+                    NFT revolution - Has presents a profitable business opportunity for anyone who intends to start their own NFT marketplace, Here at SCRIPTO 
+                    we offer Authors, writers & artist a platform to exchange there incredible effort with NFT.
+                    </p>
+                    <div className="mb-36  sm:mt-10 pt-14 sm:flex sm:justify-center lg:justify-centre">
+                      <div className="rounded-md shadow">
+                        <a
+                          href="/"
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+                        >
+                          EXPLORE
+                        </a>
+                      </div>
+                      <div className="mt-3 sm:mt-0 sm:ml-3">
+                        <a
+                          href="/create"
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
+                        >
+                          CREATE
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </main>
               </div>
             </div>
-          </div>
-        </main>
-      </div>
-    </div>
 
                   
-    <div className="flex justify-center bg-gray-400">   
-    <div className="py-10" style={{ maxWidth: '1600px' }}>
-         <div className="lg:text-center">
-          <p className="mt-2 pb-6 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            SCRIPTO NFT 
-          </p>
-        </div>
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+          <div className="flex justify-center bg-gray-400">   
+            <div className="py-10" style={{ maxWidth: '1600px' }}> 
+              <div className="lg:text-center">
+                <p className=" text-center mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                  SCRIPTO NFT 
+                </p>
+              </div>
+              <div className="lg:text-center">
+                <p className="text-center mt-4 pb-5 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+               SCRIPTO NFT Marketplace platform to create, trade and earn.
+                </p>
+              </div>
+            <div>
+          </div>
+
+
+       
+           
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 px-5">
           {
-             nfts.map((nft, i) => (
-               <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <img src={nft.image} />
-                 <div className="p-4">
-                   <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
-                   <div style={{ height: '70px', overflow: 'hidden' }}>
-                     <p className="text-gray-400">{nft.description}</p>
-                   </div>
+            nfts.map((nft, i) => (
+              <div key={i} className="bg-white border shadow rounded-xl overflow-hidden">
+             
+
+              <Document 
+
+            src={'image', nfts}
+    
+              onLoadSuccess={onDocumentLoadSuccess}
+              >
+              <Page pageNumber={pageNumber} /> 
+            </Document>
+
+          
+                
+                <div className="px-4 py-1">
+                 <div className="semi-bold text-gray-500 text-sm mb-0 uppercase">
+                  <ul>
+                    <li className="md:text-md text-black"><strong>
+                      {nft.name}</strong>
+                      </li>
+                    <li className="lowercase"><strong>
+                      {nft.description}</strong></li>
+                    <li className="md:text-md text-black"><strong>
+                      {nft.price} ETH</strong></li>
+                  </ul>
+                  <div className="justify-center px-20 ">
+                   <button className="w-60 h-10 justify-center bg-pink-500 text-white font-bold rounded" onClick={() => buyNft(nft)}>Buy</button>
+                  </div>
                  </div>
-                 <div className="p-4 bg-black">
-                   <p className="text-2xl mb-4 font-bold text-white">{nft.price} ETH</p>
-                   <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button>
                  </div>
                </div>
              ))

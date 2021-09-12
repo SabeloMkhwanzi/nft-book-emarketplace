@@ -1,7 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable jsx-a11y/alt-text */
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
+
+
 
 import { nftmarketaddress, nftaddress } from '../config'
 
@@ -37,26 +41,37 @@ export default function MyAssets() {
         tokenId: i.tokenId.toNumber(),
         seller: i.seller,
         owner: i.owner,
-        image: meta.data.multiple,
+        image: meta.data.image,
       }
       return item
     }))
     setNfts(items)
     setLoadingState('loaded') 
   }
-  if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets owned</h1>)
+  if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl min-h-screen">No assets owned</h1>)
   return (
     <div className="flex justify-center min-h-screen">
       <div className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {
             nfts.map((nft, i) => (
-              <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <img src={nft.multiple} className="rounded" />
-                <div className="p-4 bg-black">
-                  <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
-                </div>
-              </div>
+              <div key={i} className="bg-white border shadow rounded-xl overflow-hidden px-14 py-9">
+                <img src={nft.image} alt="" className="w-full"/>
+                <div className="px-4 py-0 pt-36">
+                 <div className="semi-bold text-gray-500 text-sm mb-2 uppercase">
+                  <ul>
+                    <li className="md:text-md text-black"><strong>
+                      {nft.name}</strong>
+                      </li>
+                    <li className="lowercase"><strong>
+                      {nft.description}</strong></li>
+                    <li className="md:text-md text-black"><strong>
+                      {nft.price} ETH</strong></li>
+                  </ul>
+                 </div>
+                 </div>
+               </div>
+               
             ))
           }
         </div>
