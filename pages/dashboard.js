@@ -49,17 +49,29 @@ export default function CreatorDashboard() {
         seller: i.seller,
         owner: i.owner,
         sold: i.sold,
-        image: meta.data.image, 
-        
-      }
+        image: meta.data.image,  
+      } 
       return item
     }))
+
+    const item = await Promise.all(data.map(async i => {
+      const tokenUri = await tokenContract.tokenURI(i.tokenId)
+      const meta = await axios.get(tokenUri)
+      let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
+      let ImageItem = {
+        image: meta.data.image,     
+      }
+      return ImageItem
+    }));
     
     /* create a filtered array of items that have been sold */
     const soldItems = items.filter(i => i.sold)
     setSold(soldItems)
     setNfts(items)
     setLoadingState('loaded') 
+
+    console.log(item, "image");
+    
   }
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl min-h-screen">No assets created</h1>)
   return (
@@ -71,7 +83,10 @@ export default function CreatorDashboard() {
           {
             nfts.map((nft, i) => (
               <div key={i} className="bg-white border shadow rounded-xl overflow-hidden">
-                 <img src={nft.image} alt="" className="w-full"  />
+
+                <img src={nft.image} alt="" className="w-full" />
+                
+
                 <div className="px-4 py-1">
                  <div className="semi-bold text-gray-500 text-sm mb-0 uppercase">
                   <ul>

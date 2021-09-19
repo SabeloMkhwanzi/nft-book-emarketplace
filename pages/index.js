@@ -14,6 +14,7 @@ import { UserRemoveIcon, ShoppingBagIcon, BookOpenIcon, AnnotationIcon, GlobeAlt
 
 
 import { Document, Page, pdfjs } from 'react-pdf';
+
 pdfjs.GlobalWorkerOptions.workerSrc =
 `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -22,8 +23,6 @@ import { nftaddress, nftmarketaddress } from '../config'
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../artifacts/contracts/NFTMarket.sol/NFTMarket.json'
-
-
 
 
 
@@ -59,9 +58,24 @@ export default function Home() {
       }
       return item
     }))
+
+    
+    var item = await Promise.all(data.map(async i => {
+    const tokenUri = await tokenContract.tokenURI(i.tokenId)
+    const meta = await axios.get(tokenUri)
+    let ImageItem = {
+    image: meta.data.image,     
+      }
+      
+      return (ImageItem)
+    }));
+
     setNfts(items)
-    setLoadingState('loaded') 
+    setLoadingState('loaded')
+    
+    console.log(item, "image");
   }
+
 
 
   async function buyNft(nft) {
@@ -90,30 +104,28 @@ export default function Home() {
  	setNumPages(numPages);
  	setPageNumber(1); }
   
-const features = [
-  {
-    name: 'How do I create an NFT Book?',
-    description:
-      'Choose your file to upload and Click [Create Nft Assets]. We currently support PDF, .',
-    icon: BookOpenIcon,
-  },
-  {
-    name: 'How do I sell an NFT?',
-    description:
-      'After uploading your book[PDF format] will be list immediately on the Marketplace as either an fixed price sale, according to your preference.',
-    icon: ShoppingBagIcon,
-  },
-  {
-    name: 'How do I buy an NFT?',
-    description:
-      'For NFTs with a fixed price, click the [Buy] button on the product page and complete the transaction. Once the transaction is successful, we will transfer the NFT to your wallet and the seller will receive the funds. NFT pdf book will appear on your asset dashboard',
-    icon: UserRemoveIcon,
-  },
+  const features = [
+    {
+      name: 'How do I create an NFT Book?',
+      description:
+        'Choose your file to upload and Click [Create Nft Assets]. We currently support PDF, .',
+      icon: BookOpenIcon,
+    },
+    {
+      name: 'How do I sell an NFT?',
+      description:
+        'After uploading your book[PDF format] will be list immediately on the Marketplace as either an fixed price sale, according to your preference.',
+      icon: ShoppingBagIcon,
+    },
+    {
+      name: 'How do I buy an NFT?',
+      description:
+        'For NFTs with a fixed price, click the [Buy] button on the product page and complete the transaction. Once the transaction is successful, we will transfer the NFT to your wallet and the seller will receive the funds. NFT pdf book will appear on your asset dashboard',
+      icon: UserRemoveIcon,
+    },
+  
+  ]
  
-]
- 
-
-console.log('image', nfts )
 
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
   return (
@@ -178,10 +190,11 @@ console.log('image', nfts )
             nfts.map((nft, i) => (
               <div key={i} className="bg-white border shadow rounded-xl overflow-hidden">
              
+             
 
               <Document 
 
-            src={'image', nfts}
+                  file={nfts.item, "image"}
     
               onLoadSuccess={onDocumentLoadSuccess}
               >
